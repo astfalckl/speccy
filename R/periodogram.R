@@ -37,22 +37,8 @@ periodogram <- function(
     ts <- ts * h
 
     I <- Mod(stats::fft(ts))^2
-    ff <- speccy::get_ff(n, delta, one_sided = FALSE)
-
-    if (!one_sided && !positive_freqs) {
-        ff[(ceiling(n / 2) + 1):n] <- ff[(ceiling(n / 2) + 1):n] - 1
-        ff <- speccy::fftshift(ff)
-        I <- speccy::fftshift(I)
-    } else if (one_sided) {
-        ff <- ff[1:ceiling(n / 2)]
-        I <- I[1:ceiling(n / 2)]
-    }
-
-    # NOTE: could index this, but it's fast as is
-    if (!incl_boundaries) {
-        I <- I[!(ff %in% c(0, 0.5, -0.5, 1))]
-        ff <- ff[!(ff %in% c(0, 0.5, -0.5, 1))]
-    }
+    ff <- speccy::get_ff(n, delta, incl_boundaries, one_sided, positive_freqs)
+    I <- speccy::subset_locations(I, incl_boundaries, one_sided, positive_freqs)
 
     if (return_ff) {
         return(list(ff = ff, I = I))

@@ -31,8 +31,8 @@ frequencies at zero and Nyquist (default is TRUE).}
 \item{one_sided}{Logical indicating whether to generate a one-sided frequency
 vector (default is TRUE).}
 
-\item{positive_freqs}{Logical indicating whether to include only positive
-frequencies (default is TRUE).}
+\item{positive_freqs}{Logical indicating whether to include results as
+positive frequencies or zero-centred (default is TRUE).}
 }
 \value{
 A list with components \code{ff} (the frequency vector) and \code{I}

@@ -14,8 +14,16 @@
 #' @export
 fftshift <- function(x) {
     len <- length(x)
+    is_even <- len %% 2 == 0
     half <- floor(len / 2)
-    c(x[(half + 1):len], x[1:half + (len %% 2 == 0)])
+
+    if (is_even) {
+        x <- c(x[(half + 1):len], x[1:half])
+    } else {
+        x <- c(x[(half + 2):len], x[1:(half + 1)])
+    }
+
+    return(x)
 }
 
 #' Computes an open convolution of a taper with itself.
@@ -48,8 +56,8 @@ convolve_taper <- function(h) {
 #' frequencies at zero and Nyquist (default is TRUE).
 #' @param one_sided Logical indicating whether to generate a one-sided frequency
 #' vector (default is TRUE).
-#' @param positive_freqs Logical indicating whether to include only positive
-#' frequencies (default is TRUE).
+#' @param positive_freqs Logical indicating whether to include results as
+#' positive frequencies or zero-centred (default is TRUE).
 #' @return A numeric vector representing the frequency vector for FFT.
 #' @examples
 #' get_ff(10)
@@ -66,15 +74,56 @@ get_ff <- function(
 
     if (!one_sided && !positive_freqs) {
         ff[(ceiling(n / 2) + 1):n] <- ff[(ceiling(n / 2) + 1):n] - 1
-        ff <- speccy::fftshift(ff)
-    } else if (one_sided) {
-        ff <- ff[1:ceiling(n / 2)]
     }
 
-    # NOTE: could index this, but it's fast as is
-    if (!incl_boundaries) {
-        ff <- ff[!(ff %in% c(0, 0.5, -0.5, 1))]
-    }
+    ff <- speccy::subset_locations(
+        ff, incl_boundaries, one_sided, positive_freqs
+    )
 
     return(ff / delta)
+}
+
+#' Subset frequency locations based on specified criteria.
+#'
+#' This function subsets frequency locations based on the specified criteria,
+#' such as whether to include boundaries, whether to consider only positive
+#' frequencies, and whether to return a one-sided frequency vector.
+#'
+#' @param x A numeric vector with default R frequency orderings.
+#' @inheritParams get_ff
+#' @return A numeric vector of subsetted frequency orderings.
+#' @examples
+#' x <- seq(-0.5, 0.5, by = 0.1)
+#' subset_locations(x)
+#'
+#' @export
+subset_locations <- function(
+    x,
+    incl_boundaries = TRUE,
+    one_sided = TRUE,
+    positive_freqs = TRUE
+) {
+
+    n <- length(x)
+    is_even <- n %% 2 == 0
+
+    if (!one_sided && !positive_freqs) {
+        x <- speccy::fftshift(x)
+    } else if (one_sided) {
+        x <- x[1:ceiling(n / 2)]
+    }
+
+    if (one_sided && !incl_boundaries) {
+        x <- x[-1]
+    } else if (!incl_boundaries) {
+        if (is_even) {
+            x <- x[-c(1, n / 2 + 1)]
+        } else if (!is_even && positive_freqs) {
+            x <- x[-1]
+        } else if (!is_even && !positive_freqs) {
+            x <- x[-ceiling(n / 2)]
+        }
+    }
+
+    return(x)
 }
