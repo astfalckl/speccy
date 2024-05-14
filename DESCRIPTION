@@ -1,0 +1,11 @@
+Package: speccy
+Title: Gary's Tools for Spectral Analysis
+Version: 0.0.0.9000
+Authors@R: 
+    person("Lachlan", "Astfalck", , "lachlan.astfalck@uwa.edu.au", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-8369-9384"))
+Description: This is a collection of tools for spectral analysis. This includes implementations of classic non-parametric estimators; recent debiasing methodologies; and more.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.3
