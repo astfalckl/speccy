@@ -1,5 +1,5 @@
 Package: speccy
-Title: Gary's Tools for Spectral Analysis
+Title: git remote add origin https://github.com/astfalckl/speccy.git
 Version: 0.0.0.9000
 Authors@R: 
     person("Lachlan", "Astfalck", , "lachlan.astfalck@uwa.edu.au", role = c("aut", "cre"),
