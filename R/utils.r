@@ -64,7 +64,8 @@ convolve_taper <- function(h) {
 #'
 #' @export
 get_ff <- function(
-  n, delta = 1,
+  n,
+  delta = 1,
   incl_boundaries = TRUE,
   one_sided = TRUE,
   positive_freqs = TRUE

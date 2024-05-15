@@ -7,7 +7,7 @@
 convolve_taper(h)
 }
 \arguments{
-\item{h}{A numeric vector.}
+\item{h}{A numeric vector of taper weights.}
 }
 \value{
 A numeric vector representing the tapered convolution result.

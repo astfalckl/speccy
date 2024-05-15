@@ -18,19 +18,35 @@ bochner(
 \arguments{
 \item{acf}{A numeric vector representing the autocovariance function.}
 
-\item{bias}{}
+\item{h}{A numeric vector taper weights to apply to the time series (default
+is NULL, equal weighting is assumed).}
 
-\item{full}{Logical indicating whether to return the full periodogram or only the positive frequencies (default is FALSE).}
+\item{delta}{The sampling interval (default is 1).}
 
-\item{zero}{Logical indicating whether to return the zero-frequency component (default is FALSE).}
+\item{bias}{Logical indicating whether to intentionally bias the result to
+calculate the expected periodogram}
+
+\item{return_ff}{Logical indicating whether to return the frequency vector
+(default is TRUE).}
+
+\item{incl_boundaries}{Logical indicating whether to include the boundary
+frequencies at zero and Nyquist (default is TRUE).}
+
+\item{one_sided}{Logical indicating whether to generate a one-sided frequency
+vector (default is TRUE).}
+
+\item{positive_freqs}{Logical indicating whether to include results as
+positive frequencies or zero-centred (default is TRUE).}
 }
 \value{
-A numeric vector representing the periodogram.
+A numeric vector representing the PSD or expected periodogram.
 }
 \description{
 This function computes the PSD using Bochner's (or Wiener-Khinchin's)
-theorem.
-, which involves modifying the autocovariance function (ACF) and then taking the Fourier transform of the modified ACF.
+theorem. It has an option to bias this calculation to calculate the expected
+periodogram, as detailed in Sykulski et al. (2019). We name this function
+Bochner primarily due to the simplicity of the name; although note it may
+equally be \code{named wiener_khinchin()} or \code{expected_periodogram()}.
 }
 \examples{
 acf <- c(1, 0.5, 0.3, 0.1, 0, -0.1, -0.2)

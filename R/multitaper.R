@@ -1,49 +1,55 @@
 #' Compute the multitaper spectral estimate.
 #'
-#' This function computes the multitaper spectral estimate of a time series \code{ts}
-#' using the given set of tapers. The multitaper method uses multiple tapers to
-#' reduce variance in the spectral estimate.
+#' This function computes the multitaper spectral estimate of a time series
+#' \code{ts} using the given set of tapers.
 #'
 #' @param ts A numeric vector representing the time series.
 #' @param tapers A matrix of tapers (each column is a taper).
-#' @param delta The spacing between frequency bins (default is 1).
-#' @param return_ff Logical indicating whether to return the frequency vector (default is TRUE).
-#' @param acf Logical indicating whether to compute the autocovariance function (default is FALSE).
-#' @return A list with components \code{ff} (the frequency vector) and \code{mt} (the multitaper spectral estimate).
-#' @examples
-#' ts <- sin(seq(0, 10, by = 0.1))
-#' tapers <- matrix(data = rnorm(100), nrow = 100, ncol = 5)
-#' multitaper(ts, tapers)
+#' @param acf Logical indicating whether to treat ts as the ACF. Setting to TRUE
+#' returns the expected value of the multitaper estimate (default is FALSE).
+#' @inheritParams periodogram
+#' @return A list with components \code{ff} (the frequency vector) and \code{mt}
+#' (the multitaper spectral estimate).
 #'
-#' @importFrom dwelch bochner
 #' @export
 multitaper <- function(
-    ts, tapers, delta = 1, return_ff = TRUE, acf = FALSE
-
+  ts,
+  tapers,
+  delta = 1,
+  acf = FALSE,
+  return_ff = TRUE,
+  incl_boundaries = TRUE,
+  one_sided = TRUE,
+  positive_freqs = TRUE
 ) {
 
-    m <- ncol(tapers)
-    n <- nrow(tapers)
-    periodograms <- matrix(nrow = base::ceiling(n / 2), ncol = m)
+  m <- ncol(tapers)
+  n <- nrow(tapers)
 
-    for (i in 1:m) {
-        if (acf) {
-            periodograms[, i] <- dwelch::bochner(
-                ts, h = tapers[, i], zero = TRUE
-            )
-        } else {
-            periodograms[, i] <- speccy::periodogram(
-                ts, h = tapers[, i], return_ff = FALSE
-            )
-        }
-    }
+  ff <- speccy::get_ff(n, delta, incl_boundaries, one_sided, positive_freqs)
 
-    mt <- rowMeans(periodograms)
+  periodograms <- matrix(nrow = length(ff), ncol = m)
 
-    if (return_ff) {
-        return(list(ff = get_ff(n, delta), mt = mt))
+  for (i in 1:m) {
+    if (acf) {
+      periodograms[, i] <- speccy::bochner(
+        ts, tapers[, i], delta, TRUE, FALSE,
+        incl_boundaries, one_sided, positive_freqs
+      )
     } else {
-        return(mt)
+      periodograms[, i] <- speccy::periodogram(
+        ts, tapers[, i], delta, FALSE,
+        incl_boundaries, one_sided, positive_freqs
+      )
     }
+  }
+
+  mt <- rowMeans(periodograms)
+
+  if (return_ff) {
+    return(list(ff = ff, estimate = mt))
+  } else {
+    return(mt)
+  }
 
 }

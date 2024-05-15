@@ -7,7 +7,7 @@
 #' @param ff A numeric vector of frequencies.
 #' @param phis A numeric vector of AR coefficients.
 #' @param sd The standard deviation.
-#' @param delta The sampling interval (default is 1).
+#' @inheritParams get_ff
 #' @return A numeric vector representing the AR spectrum.
 #' @examples
 #' ff <- speccy::get_ff(1000)

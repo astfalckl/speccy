@@ -36,13 +36,13 @@ periodogram <- function(
   h <- h / sqrt(sum(h^2))
   ts <- ts * h
 
-  I <- delta * Mod(stats::fft(ts))^2
+  ii <- delta * Mod(stats::fft(ts))^2
   ff <- speccy::get_ff(n, delta, incl_boundaries, one_sided, positive_freqs)
-  I <- speccy::subset_locations(I, incl_boundaries, one_sided, positive_freqs)
+  ii <- speccy::subset_locations(ii, incl_boundaries, one_sided, positive_freqs)
 
   if (return_ff) {
-    return(list(ff = ff, I = I))
+    return(list(ff = ff, estimate = ii))
   } else {
-    return(I)
+    return(ii)
   }
 }

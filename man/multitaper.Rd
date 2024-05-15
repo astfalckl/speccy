@@ -4,30 +4,44 @@
 \alias{multitaper}
 \title{Compute the multitaper spectral estimate.}
 \usage{
-multitaper(ts, tapers, delta = 1, return_ff = TRUE, acf = FALSE)
+multitaper(
+  ts,
+  tapers,
+  delta = 1,
+  acf = FALSE,
+  return_ff = TRUE,
+  incl_boundaries = TRUE,
+  one_sided = TRUE,
+  positive_freqs = TRUE
+)
 }
 \arguments{
 \item{ts}{A numeric vector representing the time series.}
 
 \item{tapers}{A matrix of tapers (each column is a taper).}
 
-\item{delta}{The spacing between frequency bins (default is 1).}
+\item{delta}{The sampling interval (default is 1).}
 
-\item{return_ff}{Logical indicating whether to return the frequency vector (default is TRUE).}
+\item{acf}{Logical indicating whether to treat ts as the ACF. Setting to TRUE
+returns the expected value of the multitaper estimate (default is FALSE).}
 
-\item{acf}{Logical indicating whether to compute the autocovariance function (default is FALSE).}
+\item{return_ff}{Logical indicating whether to return the frequency vector
+(default is TRUE).}
+
+\item{incl_boundaries}{Logical indicating whether to include the boundary
+frequencies at zero and Nyquist (default is TRUE).}
+
+\item{one_sided}{Logical indicating whether to generate a one-sided frequency
+vector (default is TRUE).}
+
+\item{positive_freqs}{Logical indicating whether to include results as
+positive frequencies or zero-centred (default is TRUE).}
 }
 \value{
-A list with components \code{ff} (the frequency vector) and \code{mt} (the multitaper spectral estimate).
+A list with components \code{ff} (the frequency vector) and \code{mt}
+(the multitaper spectral estimate).
 }
 \description{
-This function computes the multitaper spectral estimate of a time series \code{ts}
-using the given set of tapers. The multitaper method uses multiple tapers to
-reduce variance in the spectral estimate.
-}
-\examples{
-ts <- sin(seq(0, 10, by = 0.1))
-tapers <- matrix(data = rnorm(100), nrow = 100, ncol = 5)
-multitaper(ts, tapers)
-
+This function computes the multitaper spectral estimate of a time series
+\code{ts} using the given set of tapers.
 }
