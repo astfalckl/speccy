@@ -18,31 +18,31 @@
 #'
 #' @export
 periodogram <- function(
-    ts,
-    h = NULL,
-    delta = 1,
-    return_ff = TRUE,
-    incl_boundaries = TRUE,
-    one_sided = TRUE,
-    positive_freqs = TRUE
+  ts,
+  h = NULL,
+  delta = 1,
+  return_ff = TRUE,
+  incl_boundaries = TRUE,
+  one_sided = TRUE,
+  positive_freqs = TRUE
 ) {
 
-    n <- base::length(ts)
+  n <- base::length(ts)
 
-    if (is.null(h)) {
-        h <- rep(1, n)
-    }
+  if (is.null(h)) {
+    h <- rep(1, n)
+  }
 
-    h <- h / sqrt(sum(h^2))
-    ts <- ts * h
+  h <- h / sqrt(sum(h^2))
+  ts <- ts * h
 
-    I <- Mod(stats::fft(ts))^2
-    ff <- speccy::get_ff(n, delta, incl_boundaries, one_sided, positive_freqs)
-    I <- speccy::subset_locations(I, incl_boundaries, one_sided, positive_freqs)
+  I <- delta * Mod(stats::fft(ts))^2
+  ff <- speccy::get_ff(n, delta, incl_boundaries, one_sided, positive_freqs)
+  I <- speccy::subset_locations(I, incl_boundaries, one_sided, positive_freqs)
 
-    if (return_ff) {
-        return(list(ff = ff, I = I))
-    } else {
-        return(I)
-    }
+  if (return_ff) {
+    return(list(ff = ff, I = I))
+  } else {
+    return(I)
+  }
 }

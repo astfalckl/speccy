@@ -15,11 +15,11 @@
 #' @export
 sinc <- function(x, normalise = FALSE) {
 
-    if (normalise) {
-        x <- pi * x
-    }
+  if (normalise) {
+    x <- pi * x
+  }
 
-    value <- sin(x) / x
-    value[1] <- 1
-    value
+  value <- sin(x) / x
+  value[1] <- 1
+  value
 }

@@ -18,14 +18,14 @@
 #' @export
 ar_spectrum <- function(ff, phis, sd, delta = 1) {
 
-    d <- 1
-    d_conj <- 1
-    ff <- ff / delta
+  d <- 1
+  d_conj <- 1
+  ff <- ff * delta
 
-    for (j in seq_along(phis)) {
-        d <- d - phis[j] * exp(-2i * j * pi * ff)
-        d_conj <- d_conj - phis[j] * exp(2i * j * pi * ff)
-    }
+  for (j in seq_along(phis)) {
+    d <- d - phis[j] * exp(-2i * j * pi * ff)
+    d_conj <- d_conj - phis[j] * exp(2i * j * pi * ff)
+  }
 
-    return(sd^2 / Re(d * d_conj))
+  return(sd^2 * delta / Re(d * d_conj))
 }
