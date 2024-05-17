@@ -27,7 +27,10 @@ bochner <- function(
   ...
 ) {
   n <- length(acf)
-  lag_sequence <- ifelse(is.null(lag_sequence), rep(1, n), lag_sequence)
+
+  if (is.null(lag_sequence)) {
+    lag_sequence <- rep(1, n)
+  }
 
   if (bias) {
     if (is.null(h)) {

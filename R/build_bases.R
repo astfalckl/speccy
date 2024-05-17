@@ -40,6 +40,8 @@ get_centres <- function(k, delta = 1) {
 #'
 #' @inheritParams get_ff
 #' @inheritParams periodogram
+#' @inheritParams multitaper
+#' @inheritParams lag_window
 #' @param k The number of bases to build with evenly spaced centres and widths
 #'   (default is NULL).
 #' @param centres A numeric vector representing the centres of the bases
@@ -65,14 +67,22 @@ build_bases <- function(
   lowers = NULL,
   uppers = NULL,
   lag_sequence = NULL,
+  weights = NULL,
   ...
 ) {
 
   if (is.null(h)) {
     h <- rep(1, n)
   }
+  h <- as.matrix(h)
+  m <- ncol(h)
 
-  lag_sequence <- ifelse(is.null(lag_sequence), 1, lag_sequence)
+  if (is.null(weights)) {
+    weights <- rep(1, m)
+  }
+
+  weights <- weights / sum(weights)
+  weights <- as.matrix(weights, ncol = 1)
 
   if (!is.null(k)) {
 
@@ -97,6 +107,7 @@ build_bases <- function(
   k <- length(centres)
   ff <- get_ff(n, delta = delta, ...)
   bases <- matrix(nrow = length(ff), ncol = k)
+  multi_bases <- matrix(nrow = length(ff), ncol = m)
 
   tt <- 0:(n - 1)
 
@@ -104,9 +115,14 @@ build_bases <- function(
     acf_tmp <- 2 * widths[i] * speccy::sinc(pi * tt * widths[i]) *
       cos(2 * pi * centres[i] * tt)
 
-    bases[, i] <- speccy::bochner(
-      acf_tmp, h = h, delta = delta, return_ff = FALSE, ...
-    )
+    for (j in 1:m) {
+      multi_bases[, j] <- speccy::bochner(
+        acf_tmp, h = h[, j], delta, TRUE, FALSE, lag_sequence, ...
+      )
+    }
+
+    bases[, i] <- multi_bases %*% weights
+
   }
 
   colnames(bases) <- seq(1, k, 1)

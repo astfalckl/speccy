@@ -14,6 +14,7 @@ build_bases(
   lowers = NULL,
   uppers = NULL,
   lag_sequence = NULL,
+  weights = NULL,
   ...
 )
 }
@@ -39,6 +40,12 @@ is NULL, equal weighting is assumed).}
 
 \item{uppers}{A numeric vector representing the upper bounds of the bases
 (default is NULL).}
+
+\item{lag_sequence}{A numeric vector representing the lag sequence (default
+is NULL).}
+
+\item{weights}{weighted values of each multitaper. Defaults to equal
+weighting.}
 
 \item{...}{Frequency subsetting options (all default to TRUE).
 \code{incl_boundaries} Logical indicating whether to include the boundary
