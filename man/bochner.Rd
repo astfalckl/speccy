@@ -10,9 +10,8 @@ bochner(
   delta = 1,
   bias = TRUE,
   return_ff = TRUE,
-  incl_boundaries = TRUE,
-  one_sided = TRUE,
-  positive_freqs = TRUE
+  lag_sequence = NULL,
+  ...
 )
 }
 \arguments{
@@ -29,14 +28,15 @@ calculate the expected periodogram}
 \item{return_ff}{Logical indicating whether to return the frequency vector
 (default is TRUE).}
 
-\item{incl_boundaries}{Logical indicating whether to include the boundary
-frequencies at zero and Nyquist (default is TRUE).}
+\item{lag_sequence}{A numeric vector representing the lag sequence (default
+is NULL).}
 
-\item{one_sided}{Logical indicating whether to generate a one-sided frequency
-vector (default is TRUE).}
-
-\item{positive_freqs}{Logical indicating whether to include results as
-positive frequencies or zero-centred (default is TRUE).}
+\item{...}{Frequency subsetting options (all default to TRUE).
+\code{incl_boundaries} Logical indicating whether to include the boundary
+frequencies at zero and Nyquist. \code{one_sided} Logical indicating whether
+to generate a one-sided frequency vector. \code{positive_freqs} Logical
+indicating whether to include results as positive frequencies or
+zero-centred.}
 }
 \value{
 A numeric vector representing the PSD or expected periodogram.

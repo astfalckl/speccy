@@ -8,6 +8,7 @@
 #'
 #' @param acf A numeric vector representing the autocovariance function.
 #' @inheritParams periodogram
+#' @inheritParams lag_window
 #' @param bias Logical indicating whether to intentionally bias the result to
 #' calculate the expected periodogram
 #' @return A numeric vector representing the PSD or expected periodogram.
@@ -22,29 +23,27 @@ bochner <- function(
   delta = 1,
   bias = TRUE,
   return_ff = TRUE,
-  incl_boundaries = TRUE,
-  one_sided = TRUE,
-  positive_freqs = TRUE
+  lag_sequence = NULL,
+  ...
 ) {
   n <- length(acf)
+  lag_sequence <- ifelse(is.null(lag_sequence), rep(1, n), lag_sequence)
 
   if (bias) {
     if (is.null(h)) {
-      acf <- (1 - (0:(n - 1)) / n) * acf
+      acf <- (1 - (0:(n - 1)) / n) * acf * lag_sequence
     } else {
-      acf <- speccy::convolve_taper(h) * acf
+      acf <- speccy::convolve_taper(h) * acf * lag_sequence
     }
   }
 
   acf <- c(acf[1] / 2, acf[2:n])
 
   psd <- 2 * delta * Re(stats::fft(acf))
-  psd <- speccy::subset_locations(
-    psd, incl_boundaries, one_sided, positive_freqs
-  )
+  psd <- speccy::subset_locations(psd, ...)
 
   if (return_ff) {
-    ff <- get_ff(n, delta = delta, incl_boundaries, one_sided, positive_freqs)
+    ff <- get_ff(n, delta = delta, ...)
     return(list(ff = ff, psd = psd))
   } else {
     return(psd)

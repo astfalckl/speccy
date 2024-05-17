@@ -47,9 +47,7 @@ lag_window <- function(
   lag_sequence = NULL,
   return_ff = TRUE,
   acf = FALSE,
-  incl_boundaries = TRUE,
-  one_sided = TRUE,
-  positive_freqs = TRUE
+  ...
 ) {
 
   if (is.null(design_kernel) && is.null(lag_sequence)) {
@@ -71,42 +69,32 @@ lag_window <- function(
     window <- speccy::make_design_window(design_kernel, n)
 
     if (acf) {
-      I <- speccy::bochner(ts, h, delta, TRUE, FALSE, one_sided = FALSE)
+      ii <- speccy::bochner(ts, h, delta, TRUE, FALSE, one_sided = FALSE)
     } else {
-      I <- speccy::periodogram(ts, h, delta, FALSE, one_sided = FALSE)
+      ii <- speccy::periodogram(ts, h, delta, FALSE, one_sided = FALSE)
     }
 
-    lw <- stats::convolve(I, window, type = "circular")
+    lw <- stats::convolve(ii, window, type = "circular") %>%
+      speccy::subset_locations(...)
+
   }
 
   if (!is.null(lag_sequence)) {
 
-    if (acf) {
-      h_conv <- convolve_taper(h)
-      acf <- ts * h_conv
-    } else {
-      ts <- ts * h / sqrt(sum(h^2))
-      acf <- stats::convolve(ts, ts, type = "open")[n:(2 * n - 1)]
-    }
-
-    acf <- lag_sequence * acf
-    acf[1] <- acf[1] / 2
-    lw <- 2 * delta * Re(stats::fft(acf))
+  if (acf) {
+    lw <- speccy::bochner(ts, h, delta, TRUE, FALSE, lag_sequence, ...)
+  } else {
+    ts <- ts * h
+    acf_hat <- stats::convolve(ts, ts, type = "open")[n:(2 * n - 1)] / sum(h^2)
+    lw <- speccy::bochner(lag_sequence * acf_hat, h, delta, FALSE, FALSE, ...)
   }
 
+}
+
   if (return_ff) {
-    list(
-      ff = speccy::get_ff(
-        n, delta, incl_boundaries, one_sided, positive_freqs
-      ),
-      estimate = speccy::subset_locations(
-        lw, incl_boundaries, one_sided, positive_freqs
-      )
-    )
+    list(ff = speccy::get_ff(n, delta, ...), estimate = lw)
   } else {
-    speccy::subset_locations(
-        lw, incl_boundaries, one_sided, positive_freqs
-    )
+    lw
   }
 
 }

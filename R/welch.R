@@ -60,9 +60,7 @@ welch <- function(
   delta = 1,
   h = NULL,
   return_ff = TRUE,
-  incl_boundaries = TRUE,
-  one_sided = TRUE,
-  positive_freqs = TRUE
+  ...
 ) {
 
   if (is.null(s) && is.null(overlap)) {
@@ -93,16 +91,14 @@ welch <- function(
     h <- rep(1, l)
   }
 
-  ff <- speccy::get_ff(l, delta, incl_boundaries, one_sided, positive_freqs)
+  ff <- speccy::get_ff(l, delta, ...)
   pxx <- matrix(nrow = length(ff), ncol = m)
 
   for (i in 1:m){
     start <- (i - 1) * s + 1
     end <- start + l - 1
     pxx[, i] <- speccy::periodogram(
-      ts[start:end], h = h, delta = delta, return_ff = FALSE,
-      incl_boundaries = incl_boundaries, one_sided = one_sided,
-      positive_freqs = positive_freqs
+      ts[start:end], h = h, delta = delta, return_ff = FALSE, ...
     )
   }
 

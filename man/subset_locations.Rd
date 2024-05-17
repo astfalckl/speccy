@@ -4,24 +4,17 @@
 \alias{subset_locations}
 \title{Subset frequency locations based on specified criteria.}
 \usage{
-subset_locations(
-  x,
-  incl_boundaries = TRUE,
-  one_sided = TRUE,
-  positive_freqs = TRUE
-)
+subset_locations(x, ...)
 }
 \arguments{
 \item{x}{A numeric vector with default R frequency orderings.}
 
-\item{incl_boundaries}{Logical indicating whether to include the boundary
-frequencies at zero and Nyquist (default is TRUE).}
-
-\item{one_sided}{Logical indicating whether to generate a one-sided frequency
-vector (default is TRUE).}
-
-\item{positive_freqs}{Logical indicating whether to include results as
-positive frequencies or zero-centred (default is TRUE).}
+\item{...}{Frequency subsetting options (all default to TRUE).
+\code{incl_boundaries} Logical indicating whether to include the boundary
+frequencies at zero and Nyquist. \code{one_sided} Logical indicating whether
+to generate a one-sided frequency vector. \code{positive_freqs} Logical
+indicating whether to include results as positive frequencies or
+zero-centred.}
 }
 \value{
 A numeric vector of subsetted frequency orderings.

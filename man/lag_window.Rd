@@ -12,9 +12,7 @@ lag_window(
   lag_sequence = NULL,
   return_ff = TRUE,
   acf = FALSE,
-  incl_boundaries = TRUE,
-  one_sided = TRUE,
-  positive_freqs = TRUE
+  ...
 )
 }
 \arguments{
@@ -38,14 +36,12 @@ is NULL).}
 \item{acf}{Logical indicating whether to treat ts as the ACF. Setting to TRUE
 returns the expected value of the multitaper estimate (default is FALSE).}
 
-\item{incl_boundaries}{Logical indicating whether to include the boundary
-frequencies at zero and Nyquist (default is TRUE).}
-
-\item{one_sided}{Logical indicating whether to generate a one-sided frequency
-vector (default is TRUE).}
-
-\item{positive_freqs}{Logical indicating whether to include results as
-positive frequencies or zero-centred (default is TRUE).}
+\item{...}{Frequency subsetting options (all default to TRUE).
+\code{incl_boundaries} Logical indicating whether to include the boundary
+frequencies at zero and Nyquist. \code{one_sided} Logical indicating whether
+to generate a one-sided frequency vector. \code{positive_freqs} Logical
+indicating whether to include results as positive frequencies or
+zero-centred.}
 }
 \value{
 A list with components \code{ff} (the frequency vector) and

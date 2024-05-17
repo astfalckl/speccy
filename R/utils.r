@@ -52,12 +52,12 @@ convolve_taper <- function(h) {
 #'
 #' @param n The length of the input signal.
 #' @param delta The sampling interval (default is 1).
-#' @param incl_boundaries Logical indicating whether to include the boundary
-#' frequencies at zero and Nyquist (default is TRUE).
-#' @param one_sided Logical indicating whether to generate a one-sided frequency
-#' vector (default is TRUE).
-#' @param positive_freqs Logical indicating whether to include results as
-#' positive frequencies or zero-centred (default is TRUE).
+#' @param ... Frequency subsetting options (all default to TRUE).
+#' \code{incl_boundaries} Logical indicating whether to include the boundary
+#' frequencies at zero and Nyquist. \code{one_sided} Logical indicating whether
+#' to generate a one-sided frequency vector. \code{positive_freqs} Logical
+#' indicating whether to include results as positive frequencies or
+#' zero-centred.
 #' @return A numeric vector representing the frequency vector for FFT.
 #' @examples
 #' get_ff(10)
@@ -66,10 +66,22 @@ convolve_taper <- function(h) {
 get_ff <- function(
   n,
   delta = 1,
-  incl_boundaries = TRUE,
-  one_sided = TRUE,
-  positive_freqs = TRUE
+  ...
 ) {
+
+  args <- list(...)
+
+  incl_boundaries <- ifelse(
+    "incl_boundaries" %in% names(args), args$incl_boundaries, TRUE
+  )
+
+  one_sided <- ifelse(
+    "one_sided" %in% names(args), args$one_sided, TRUE
+  )
+
+  positive_freqs <- ifelse(
+    "positive_freqs" %in% names(args), args$positive_freqs, TRUE
+  )
 
   ff <- seq(0, n - 1) / n
 
@@ -78,7 +90,10 @@ get_ff <- function(
   }
 
   ff <- speccy::subset_locations(
-    ff, incl_boundaries, one_sided, positive_freqs
+    ff,
+    incl_boundaries = incl_boundaries,
+    one_sided = one_sided,
+    positive_freqs = positive_freqs
   )
 
   return(ff / delta)
@@ -99,11 +114,21 @@ get_ff <- function(
 #'
 #' @export
 subset_locations <- function(
-  x,
-  incl_boundaries = TRUE,
-  one_sided = TRUE,
-  positive_freqs = TRUE
+  x, ...
 ) {
+
+  args <- list(...)
+  incl_boundaries <- ifelse(
+    "incl_boundaries" %in% names(args), args$incl_boundaries, TRUE
+  )
+
+  one_sided <- ifelse(
+    "one_sided" %in% names(args), args$one_sided, TRUE
+  )
+
+  positive_freqs <- ifelse(
+    "positive_freqs" %in% names(args), args$positive_freqs, TRUE
+  )
 
   n <- length(x)
   is_even <- n %% 2 == 0

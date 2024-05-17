@@ -22,9 +22,7 @@ periodogram <- function(
   h = NULL,
   delta = 1,
   return_ff = TRUE,
-  incl_boundaries = TRUE,
-  one_sided = TRUE,
-  positive_freqs = TRUE
+  ...
 ) {
 
   n <- base::length(ts)
@@ -37,8 +35,8 @@ periodogram <- function(
   ts <- ts * h
 
   ii <- delta * Mod(stats::fft(ts))^2
-  ff <- speccy::get_ff(n, delta, incl_boundaries, one_sided, positive_freqs)
-  ii <- speccy::subset_locations(ii, incl_boundaries, one_sided, positive_freqs)
+  ff <- speccy::get_ff(n, delta, ...)
+  ii <- speccy::subset_locations(ii, ...)
 
   if (return_ff) {
     return(list(ff = ff, estimate = ii))

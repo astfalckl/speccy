@@ -10,9 +10,8 @@ multitaper(
   delta = 1,
   acf = FALSE,
   return_ff = TRUE,
-  incl_boundaries = TRUE,
-  one_sided = TRUE,
-  positive_freqs = TRUE
+  weights = NULL,
+  ...
 )
 }
 \arguments{
@@ -28,14 +27,15 @@ returns the expected value of the multitaper estimate (default is FALSE).}
 \item{return_ff}{Logical indicating whether to return the frequency vector
 (default is TRUE).}
 
-\item{incl_boundaries}{Logical indicating whether to include the boundary
-frequencies at zero and Nyquist (default is TRUE).}
+\item{weights}{weighted values of each multitaper. Defaults to equal
+weighting.}
 
-\item{one_sided}{Logical indicating whether to generate a one-sided frequency
-vector (default is TRUE).}
-
-\item{positive_freqs}{Logical indicating whether to include results as
-positive frequencies or zero-centred (default is TRUE).}
+\item{...}{Frequency subsetting options (all default to TRUE).
+\code{incl_boundaries} Logical indicating whether to include the boundary
+frequencies at zero and Nyquist. \code{one_sided} Logical indicating whether
+to generate a one-sided frequency vector. \code{positive_freqs} Logical
+indicating whether to include results as positive frequencies or
+zero-centred.}
 }
 \value{
 A list with components \code{ff} (the frequency vector) and \code{mt}
