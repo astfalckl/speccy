@@ -13,16 +13,10 @@
 #' @export
 get_centres <- function(k, delta = 1) {
 
-    is_even <- k %% 2 == 0
-    width <- 1 / k
+    half_width <- 0.5 / (2 * k)
+    centres <- seq(half_width, (2 * k - 1) * half_width, 2 * half_width) / delta
 
-    if (is_even) {
-        centres <- seq(-0.5, 0.5 - width, length = k) / delta
-    } else {
-        centres <- seq(-0.5 + width / 2, 0.5 - width / 2, length = k) / delta
-    }
-
-    list(centres = centres, width = width / delta)
+    return(list(centres = centres, width = 2 * half_width))
 
 }
 
@@ -89,6 +83,10 @@ build_bases <- function(
     basis_type <- "even"
     centres <- speccy::get_centres(k, delta)$centres
     widths <- rep(speccy::get_centres(k, delta)$width, k)
+
+    # ARCHIVE: used to call dwelch, think it's fixed, keeping for now.
+    # centres <- dwelch::get_centres(n, k, delta)$centres
+    # widths <- rep(dwelch::get_centres(n, k, delta)$width, k)
 
   } else if ((!is.null(centres) && !is.null(widths))) {
 
